@@ -285,12 +285,8 @@ async def to_code(config):
         if capabilities.get(CONF_CAPABILITIES_VERTICAL_SWING):
             cg.add(var_dev.set_supports_vertical_swing(True))
 
-        if CONF_CAPABILITIES in device and CONF_CAPABILITIES_HORIZONTAL_SWING in device[CONF_CAPABILITIES]:
-            cg.add(var_dev.set_supports_horizontal_swing(
-                device[CONF_CAPABILITIES][CONF_CAPABILITIES_HORIZONTAL_SWING]))
-        elif CONF_CAPABILITIES in config and CONF_CAPABILITIES_HORIZONTAL_SWING in config[CONF_CAPABILITIES]:
-            cg.add(var_dev.set_supports_horizontal_swing(
-                config[CONF_CAPABILITIES][CONF_CAPABILITIES_HORIZONTAL_SWING]))
+        if capabilities.get(CONF_CAPABILITIES_HORIZONTAL_SWING):
+            cg.add(var_dev.set_supports_horizontal_swing(True))
 
         none_added = False
         for preset in PRESETS:
