@@ -4,19 +4,36 @@ namespace esphome
 {
   namespace samsung_ac
   {
+    template <typename T>
+    T str_to_enum(const std::string &value, const std::unordered_map<std::string, T> &mapping, T default_value)
+    {
+      auto it = mapping.find(value);
+      if (it != mapping.end())
+      {
+        return it->second;
+      }
+      return default_value;
+    }
+
     Mode str_to_mode(const std::string &value)
     {
-      if (value == "Auto")
-        return Mode::Auto;
-      if (value == "Cool")
-        return Mode::Cool;
-      if (value == "Dry")
-        return Mode::Dry;
-      if (value == "Fan")
-        return Mode::Fan;
-      if (value == "Heat")
-        return Mode::Heat;
-      return Mode::Unknown;
+      static const std::unordered_map<std::string, Mode> mode_map = {
+          {"Auto", Mode::Auto},
+          {"Cool", Mode::Cool},
+          {"Dry", Mode::Dry},
+          {"Fan", Mode::Fan},
+          {"Heat", Mode::Heat}};
+      return str_to_enum(value, mode_map, Mode::Unknown);
+    }
+
+    WaterHeaterMode str_to_water_heater_mode(const std::string &value)
+    {
+      static const std::unordered_map<std::string, WaterHeaterMode> water_heater_mode_map = {
+          {"Eco", WaterHeaterMode::Eco},
+          {"Standard", WaterHeaterMode::Standard},
+          {"Power", WaterHeaterMode::Power},
+          {"Force", WaterHeaterMode::Force}};
+      return str_to_enum(value, water_heater_mode_map, WaterHeaterMode::Unknown);
     }
 
     std::string mode_to_str(Mode mode)
@@ -34,21 +51,8 @@ namespace esphome
       case Mode::Heat:
         return "Heat";
       default:
-        return "";
+        return "Unknown";
       };
-    }
-    
-    WaterHeaterMode str_to_water_heater_mode(const std::string &value)
-    {
-      if (value == "Eco")
-        return WaterHeaterMode::Eco;
-      if (value == "Standard")
-        return WaterHeaterMode::Standard;
-      if (value == "Power")
-        return WaterHeaterMode::Power;
-      if (value == "Force")
-        return WaterHeaterMode::Force;
-      return WaterHeaterMode::Unknown;
     }
 
     std::string water_heater_mode_to_str(WaterHeaterMode waterheatermode)
@@ -64,46 +68,41 @@ namespace esphome
       case WaterHeaterMode::Force:
         return "Force";
       default:
-        return "";
+        return "Unknown";
       };
+    }
+
+    template <typename T, typename U>
+    optional<U> enum_to_enum(T value, const std::unordered_map<T, U> &mapping)
+    {
+      auto it = mapping.find(value);
+      if (it != mapping.end())
+      {
+        return it->second;
+      }
+      return nullopt;
     }
 
     optional<climate::ClimateMode> mode_to_climatemode(Mode mode)
     {
-      switch (mode)
-      {
-      case Mode::Auto:
-        return climate::ClimateMode::CLIMATE_MODE_AUTO;
-      case Mode::Cool:
-        return climate::ClimateMode::CLIMATE_MODE_COOL;
-      case Mode::Dry:
-        return climate::ClimateMode::CLIMATE_MODE_DRY;
-      case Mode::Fan:
-        return climate::ClimateMode::CLIMATE_MODE_FAN_ONLY;
-      case Mode::Heat:
-        return climate::ClimateMode::CLIMATE_MODE_HEAT;
-      default:
-        return nullopt;
-      }
+      static const std::unordered_map<Mode, climate::ClimateMode> mapping = {
+          {Mode::Auto, climate::ClimateMode::CLIMATE_MODE_AUTO},
+          {Mode::Cool, climate::ClimateMode::CLIMATE_MODE_COOL},
+          {Mode::Dry, climate::ClimateMode::CLIMATE_MODE_DRY},
+          {Mode::Fan, climate::ClimateMode::CLIMATE_MODE_FAN_ONLY},
+          {Mode::Heat, climate::ClimateMode::CLIMATE_MODE_HEAT}};
+      return enum_to_enum(mode, mapping);
     }
 
     Mode climatemode_to_mode(climate::ClimateMode mode)
     {
-      switch (mode)
-      {
-      case climate::ClimateMode::CLIMATE_MODE_COOL:
-        return Mode::Cool;
-      case climate::ClimateMode::CLIMATE_MODE_HEAT:
-        return Mode::Heat;
-      case climate::ClimateMode::CLIMATE_MODE_FAN_ONLY:
-        return Mode::Fan;
-      case climate::ClimateMode::CLIMATE_MODE_DRY:
-        return Mode::Dry;
-      case climate::ClimateMode::CLIMATE_MODE_AUTO:
-        return Mode::Auto;
-      default:
-        return Mode::Unknown;
-      }
+      static const std::unordered_map<climate::ClimateMode, Mode> reverse_mapping = {
+          {climate::ClimateMode::CLIMATE_MODE_AUTO, Mode::Auto},
+          {climate::ClimateMode::CLIMATE_MODE_COOL, Mode::Cool},
+          {climate::ClimateMode::CLIMATE_MODE_DRY, Mode::Dry},
+          {climate::ClimateMode::CLIMATE_MODE_FAN_ONLY, Mode::Fan},
+          {climate::ClimateMode::CLIMATE_MODE_HEAT, Mode::Heat}};
+      return enum_to_enum(mode, reverse_mapping).value_or(Mode::Unknown);
     }
 
     optional<climate::ClimateFanMode> fanmode_to_climatefanmode(FanMode fanmode)
@@ -182,7 +181,7 @@ namespace esphome
       }
     }
 
-    optional<climate::ClimatePreset> altmodename_to_preset(const AltModeName& name)
+    optional<climate::ClimatePreset> altmodename_to_preset(const AltModeName &name)
     {
       if (str_equals_case_insensitive(name, "ECO"))
         return optional<climate::ClimatePreset>(climate::CLIMATE_PRESET_ECO);
