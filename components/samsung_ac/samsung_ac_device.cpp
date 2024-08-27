@@ -91,10 +91,12 @@ namespace esphome
 
       ProtocolRequest request;
 
-      if (auto targetTempOpt = call.get_target_temperature(); targetTempOpt.has_value())
+      auto targetTempOpt = call.get_target_temperature();
+      if (targetTempOpt.has_value())
         request.target_temp = targetTempOpt.value();
 
-      if (auto modeOpt = call.get_mode(); modeOpt.has_value())
+      auto modeOpt = call.get_mode();
+      if (modeOpt.has_value())
       {
         if (modeOpt.value() == climate::ClimateMode::CLIMATE_MODE_OFF)
         {
@@ -106,20 +108,35 @@ namespace esphome
         }
       }
 
-      if (auto fanmodeOpt = call.get_fan_mode(); fanmodeOpt.has_value())
+      auto fanmodeOpt = call.get_fan_mode();
+      if (fanmodeOpt.has_value())
+      {
         request.fan_mode = climatefanmode_to_fanmode(fanmodeOpt.value());
+      }
 
-      if (auto customFanmodeOpt = call.get_custom_fan_mode(); customFanmodeOpt.has_value())
+      auto customFanmodeOpt = call.get_custom_fan_mode();
+      if (customFanmodeOpt.has_value())
+      {
         request.fan_mode = customfanmode_to_fanmode(customFanmodeOpt.value());
+      }
 
-      if (auto presetOpt = call.get_preset(); presetOpt.has_value())
+      auto presetOpt = call.get_preset();
+      if (presetOpt.has_value())
+      {
         set_alt_mode_by_name(request, preset_to_altmodename(presetOpt.value()));
+      }
 
-      if (auto customPresetOpt = call.get_custom_preset(); customPresetOpt.has_value())
+      auto customPresetOpt = call.get_custom_preset();
+      if (customPresetOpt.has_value())
+      {
         set_alt_mode_by_name(request, customPresetOpt.value());
+      }
 
-      if (auto swingModeOpt = call.get_swing_mode(); swingModeOpt.has_value())
+      auto swingModeOpt = call.get_swing_mode();
+      if (swingModeOpt.has_value())
+      {
         request.swing_mode = climateswingmode_to_swingmode(swingModeOpt.value());
+      }
 
       device->publish_request(request);
     }
