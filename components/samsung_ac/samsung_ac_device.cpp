@@ -20,19 +20,19 @@ namespace esphome
       traits.set_visual_min_temperature(16);
       traits.set_visual_max_temperature(30);
 
-      std::set<climate::ClimateMode> modes;
-      modes.insert(climate::CLIMATE_MODE_OFF);
-      modes.insert(climate::CLIMATE_MODE_AUTO);
-      modes.insert(climate::CLIMATE_MODE_COOL);
-      modes.insert(climate::CLIMATE_MODE_DRY);
-      modes.insert(climate::CLIMATE_MODE_FAN_ONLY);
-      modes.insert(climate::CLIMATE_MODE_HEAT);
+      const std::set<climate::ClimateMode> modes = {
+          climate::CLIMATE_MODE_OFF,
+          climate::CLIMATE_MODE_AUTO,
+          climate::CLIMATE_MODE_COOL,
+          climate::CLIMATE_MODE_DRY,
+          climate::CLIMATE_MODE_FAN_ONLY,
+          climate::CLIMATE_MODE_HEAT};
       traits.set_supported_modes(modes);
 
-      std::set<climate::ClimateFanMode> fan;
-      fan.insert(climate::ClimateFanMode::CLIMATE_FAN_HIGH);
-      fan.insert(climate::ClimateFanMode::CLIMATE_FAN_MIDDLE);
-      fan.insert(climate::ClimateFanMode::CLIMATE_FAN_LOW);
+      std::set<climate::ClimateFanMode> fan = {
+          climate::ClimateFanMode::CLIMATE_FAN_HIGH,
+          climate::ClimateFanMode::CLIMATE_FAN_MIDDLE,
+          climate::ClimateFanMode::CLIMATE_FAN_LOW};
 
       if (this->mode != climate::CLIMATE_MODE_FAN_ONLY)
       {
@@ -91,12 +91,10 @@ namespace esphome
 
       ProtocolRequest request;
 
-      auto targetTempOpt = call.get_target_temperature();
-      if (targetTempOpt.has_value())
+      if (auto targetTempOpt = call.get_target_temperature(); targetTempOpt.has_value())
         request.target_temp = targetTempOpt.value();
 
-      auto modeOpt = call.get_mode();
-      if (modeOpt.has_value())
+      if (auto modeOpt = call.get_mode(); modeOpt.has_value())
       {
         if (modeOpt.value() == climate::ClimateMode::CLIMATE_MODE_OFF)
         {
@@ -108,35 +106,20 @@ namespace esphome
         }
       }
 
-      auto fanmodeOpt = call.get_fan_mode();
-      if (fanmodeOpt.has_value())
-      {
+      if (auto fanmodeOpt = call.get_fan_mode(); fanmodeOpt.has_value())
         request.fan_mode = climatefanmode_to_fanmode(fanmodeOpt.value());
-      }
 
-      auto customFanmodeOpt = call.get_custom_fan_mode();
-      if (customFanmodeOpt.has_value())
-      {
+      if (auto customFanmodeOpt = call.get_custom_fan_mode(); customFanmodeOpt.has_value())
         request.fan_mode = customfanmode_to_fanmode(customFanmodeOpt.value());
-      }
 
-      auto presetOpt = call.get_preset();
-      if (presetOpt.has_value())
-      {
+      if (auto presetOpt = call.get_preset(); presetOpt.has_value())
         set_alt_mode_by_name(request, preset_to_altmodename(presetOpt.value()));
-      }
 
-      auto customPresetOpt = call.get_custom_preset();
-      if (customPresetOpt.has_value())
-      {
+      if (auto customPresetOpt = call.get_custom_preset(); customPresetOpt.has_value())
         set_alt_mode_by_name(request, customPresetOpt.value());
-      }
 
-      auto swingModeOpt = call.get_swing_mode();
-      if (swingModeOpt.has_value())
-      {
+      if (auto swingModeOpt = call.get_swing_mode(); swingModeOpt.has_value())
         request.swing_mode = climateswingmode_to_swingmode(swingModeOpt.value());
-      }
 
       device->publish_request(request);
     }
