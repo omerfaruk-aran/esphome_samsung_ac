@@ -2,6 +2,7 @@
 
 #include <optional>
 #include "esphome/components/climate/climate.h"
+#include "protocol.h"
 
 namespace esphome
 {
