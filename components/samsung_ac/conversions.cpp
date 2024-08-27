@@ -1,4 +1,5 @@
 #include "conversions.h"
+#include <cstring>
 
 namespace esphome
 {
