@@ -5,7 +5,7 @@ namespace esphome
 {
   namespace samsung_ac
   {
-    Mode str_to_mode(const const char* &value)
+    Mode str_to_mode(const char* &value)
     {
       if (value == "Auto")
         return Mode::Auto;
@@ -39,7 +39,7 @@ namespace esphome
       };
     }
     
-    WaterHeaterMode str_to_water_heater_mode(const const char* &value)
+    WaterHeaterMode str_to_water_heater_mode(const char* &value)
     {
       if (value == "Eco")
         return WaterHeaterMode::Eco;
@@ -152,7 +152,7 @@ namespace esphome
       }
     }
 
-    FanMode customfanmode_to_fanmode(const const char* &value)
+    FanMode customfanmode_to_fanmode(const char* &value)
     {
       if (value == "Turbo")
         return FanMode::Turbo;
