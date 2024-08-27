@@ -1,4 +1,5 @@
 #include "conversions.h"
+#include <unordered_map> 
 
 namespace esphome
 {
