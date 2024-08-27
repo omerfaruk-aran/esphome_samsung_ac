@@ -7,8 +7,8 @@ namespace esphome
         std::string long_to_hex(long number)
         {
             char str[10];
-            sprintf(str, "%02lx", number);
-            return str;
+            snprintf(str, sizeof(str), "%02lx", number);
+            return std::string(str);
         }
 
         int hex_to_int(const std::string &hex)
@@ -19,9 +19,12 @@ namespace esphome
         std::string bytes_to_hex(const std::vector<uint8_t> &data)
         {
             std::string str;
-            for (int i = 0; i < data.size(); i++)
+            str.reserve(data.size() * 2);
+            for (uint8_t byte : data)
             {
-                str += long_to_hex(data[i]);
+                char buf[3];
+                snprintf(buf, sizeof(buf), "%02x", byte);
+                str += buf;
             }
             return str;
         }
@@ -29,13 +32,15 @@ namespace esphome
         std::vector<uint8_t> hex_to_bytes(const std::string &hex)
         {
             std::vector<uint8_t> bytes;
-            for (unsigned int i = 0; i < hex.length(); i += 2)
+            bytes.reserve(hex.length() / 2); // Verimlilik için hafıza rezervasyonu.
+            for (size_t i = 0; i < hex.length(); i += 2)
             {
-                bytes.push_back((uint8_t)strtol(hex.substr(i, 2).c_str(), NULL, 16));
+                uint8_t byte = (uint8_t)strtol(hex.substr(i, 2).c_str(), nullptr, 16);
+                bytes.push_back(byte);
             }
             return bytes;
         }
-
+        
         void print_bits_8(uint8_t value)
         {
             std::cout << std::bitset<8>(value) << std::endl;
