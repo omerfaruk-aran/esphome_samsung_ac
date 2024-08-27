@@ -280,12 +280,10 @@ async def to_code(config):
             device[CONF_DEVICE_ID], device[CONF_DEVICE_ADDRESS], var)
 
         # setup capabilities
-        if CONF_CAPABILITIES in device and CONF_CAPABILITIES_VERTICAL_SWING in device[CONF_CAPABILITIES]:
-            cg.add(var_dev.set_supports_vertical_swing(
-                device[CONF_CAPABILITIES][CONF_CAPABILITIES_VERTICAL_SWING]))
-        elif CONF_CAPABILITIES in config and CONF_CAPABILITIES_VERTICAL_SWING in config[CONF_CAPABILITIES]:
-            cg.add(var_dev.set_supports_vertical_swing(
-                config[CONF_CAPABILITIES][CONF_CAPABILITIES_VERTICAL_SWING]))
+        capabilities = device.get(CONF_CAPABILITIES, config.get(CONF_CAPABILITIES, {}))
+
+        if capabilities.get(CONF_CAPABILITIES_VERTICAL_SWING):
+            cg.add(var_dev.set_supports_vertical_swing(True))
 
         if CONF_CAPABILITIES in device and CONF_CAPABILITIES_HORIZONTAL_SWING in device[CONF_CAPABILITIES]:
             cg.add(var_dev.set_supports_horizontal_swing(
@@ -341,29 +339,19 @@ async def to_code(config):
             sens = await switch.new_switch(conf)
             cg.add(var_dev.set_water_heater_power_switch(sens))
 
-        if CONF_DEVICE_ROOM_TEMPERATURE in device:
-            conf = device[CONF_DEVICE_ROOM_TEMPERATURE]
-            sens = await sensor.new_sensor(conf)
-            cg.add(var_dev.set_room_temperature_sensor(sens))
-
         if CONF_DEVICE_ROOM_TEMPERATURE_OFFSET in device:
             cg.add(var_dev.set_room_temperature_offset(
                 device[CONF_DEVICE_ROOM_TEMPERATURE_OFFSET]))
-
-        if CONF_DEVICE_OUTDOOR_TEMPERATURE in device:
-            conf = device[CONF_DEVICE_OUTDOOR_TEMPERATURE]
-            sens = await sensor.new_sensor(conf)
-            cg.add(var_dev.set_outdoor_temperature_sensor(sens))
             
-        if CONF_DEVICE_INDOOR_EVA_IN_TEMPERATURE in device:
-            conf = device[CONF_DEVICE_INDOOR_EVA_IN_TEMPERATURE]
-            sens = await sensor.new_sensor(conf)
-            cg.add(var_dev.set_indoor_eva_in_temperature_sensor(sens))
-            
-        if CONF_DEVICE_INDOOR_EVA_OUT_TEMPERATURE in device:
-            conf = device[CONF_DEVICE_INDOOR_EVA_OUT_TEMPERATURE]
-            sens = await sensor.new_sensor(conf)
-            cg.add(var_dev.set_indoor_eva_out_temperature_sensor(sens))
+        for sensor_type, sensor_conf in [
+            (CONF_DEVICE_ROOM_TEMPERATURE, var_dev.set_room_temperature_sensor),
+            (CONF_DEVICE_OUTDOOR_TEMPERATURE, var_dev.set_outdoor_temperature_sensor),
+            (CONF_DEVICE_INDOOR_EVA_IN_TEMPERATURE, var_dev.set_indoor_eva_in_temperature_sensor),
+            (CONF_DEVICE_INDOOR_EVA_OUT_TEMPERATURE, var_dev.set_indoor_eva_out_temperature_sensor),
+        ]:
+            if sensor_type in device:
+                sens = await sensor.new_sensor(device[sensor_type])
+                cg.add(sensor_conf(sens))
             
         if CONF_DEVICE_ERROR_CODE in device:
             conf = device[CONF_DEVICE_ERROR_CODE]
@@ -439,19 +427,16 @@ async def to_code(config):
 
     cg.add(var.set_debug_mqtt(config[CONF_DEBUG_MQTT_HOST], config[CONF_DEBUG_MQTT_PORT],
            config[CONF_DEBUG_MQTT_USERNAME], config[CONF_DEBUG_MQTT_PASSWORD]))
-
-    if (CONF_DEBUG_LOG_MESSAGES in config):
-        cg.add(var.set_debug_log_messages(config[CONF_DEBUG_LOG_MESSAGES]))
-
-    if (CONF_DEBUG_LOG_MESSAGES_RAW in config):
-        cg.add(var.set_debug_log_messages_raw(
-            config[CONF_DEBUG_LOG_MESSAGES_RAW]))
-            
-    if (CONF_NON_NASA_KEEPALIVE in config):
-        cg.add(var.set_non_nasa_keepalive(config[CONF_NON_NASA_KEEPALIVE]))
         
-    if (CONF_DEBUG_LOG_UNDEFINED_MESSAGES in config):
-        cg.add(var.set_debug_log_undefined_messages(config[CONF_DEBUG_LOG_UNDEFINED_MESSAGES]))
+    for debug_option in [
+        CONF_DEBUG_LOG_MESSAGES,
+        CONF_DEBUG_LOG_MESSAGES_RAW,
+        CONF_NON_NASA_KEEPALIVE,
+        CONF_DEBUG_LOG_UNDEFINED_MESSAGES,
+    ]:
+        if debug_option in config:
+            cg.add(getattr(var, f"set_{debug_option}")(config[debug_option]))
+
 
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
