@@ -7,10 +7,10 @@
 - [ ] Documentation Update
 
 ### Details of Changes
-<!-- List the key changes or updates in this PR. Include any relevant issue numbers, if applicable. -->
+<!-- Please list the key changes or updates in this PR. Include any relevant issue numbers if applicable. -->
 
 ## Related Issues
-<!-- If this PR addresses an existing issue, link it here (e.g., Fixes #123). If this PR does not relate to an issue, leave this section empty. -->
+<!-- If this PR addresses an issue, link it here (e.g., Fixes #123). -->
 
 ## Checklist
 - [ ] Code compiles without errors.
@@ -39,11 +39,11 @@
 ## Test Plan
 
 ### How were these changes tested?
-<!-- Describe how you tested your changes. Include details on the environment, devices used, and test cases. -->
+<!-- Please describe how you tested your changes. Include details on the environment, devices used, and test cases. -->
 
 ### Logs
 <!-- Include relevant logs that show the changes in action (both ESPHome and Home Assistant logs). -->
 
 ## YAML Configuration
 ```yaml
-# Include the relevant YAML configuration used for testing this PR
+# Include the relevant YAML configuration used for testing this PR.
