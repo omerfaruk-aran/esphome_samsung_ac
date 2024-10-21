@@ -47,13 +47,3 @@
 ## YAML Configuration
 ```yaml
 # Include the relevant YAML configuration used for testing this PR
-```
-
-Then save this as `.github/pull_request_template.md`.
-
-### 3. YAML-based Templates
-If you want to stick with the YAML-based template approach, it won't auto-load, but it will appear as a selectable template if you add multiple templates. You can create multiple YAML templates under `.github/PULL_REQUEST_TEMPLATE/` and manually select them during the PR creation process.
-
-To summarize:
-- For auto-loading, you need to use a `pull_request_template.md`.
-- YAML templates need to be manually selected during PR creation.
