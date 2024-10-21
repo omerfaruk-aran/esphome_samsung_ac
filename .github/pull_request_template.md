@@ -47,3 +47,4 @@
 ## YAML Configuration
 ```yaml
 # Include the relevant YAML configuration used for testing this PR.
+```
