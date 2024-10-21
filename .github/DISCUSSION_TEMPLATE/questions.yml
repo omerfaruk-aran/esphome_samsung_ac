@@ -56,8 +56,8 @@ body:
     id: esp_model
     attributes:
       label: ESP Device Model
-      description: Provide the model of your ESP device (e.g., ESP32, ESP8266).
-      placeholder: e.g., ESP32
+      description: Provide the model of your ESP device (e.g., ESP32, ESP8266, M5STACK ATOM Lite).
+      placeholder: e.g., M5STACK ATOM Lite + M5STACK RS-485
 
   - type: input
     id: connection_pins
@@ -83,9 +83,9 @@ body:
   - type: textarea
     id: esphome_logs
     attributes:
-      label: ESPHome Logs
+      label: ESPHome Samsung AC Logs
       description: Please attach any relevant ESPHome logs that can help us understand your issue.
-      placeholder: Include ESPHome logs here...
+      placeholder: Include ESPHome Samsung AC logs here...
 
   - type: textarea
     id: additional_info
