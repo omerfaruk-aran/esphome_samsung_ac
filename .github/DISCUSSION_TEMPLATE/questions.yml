@@ -18,8 +18,6 @@ body:
       label: Your Question
       description: Please describe your question in detail.
       placeholder: Write your question here...
-    validations:
-      required: true
 
   - type: textarea
     attributes:
@@ -34,11 +32,8 @@ body:
       description: Please confirm the following before submitting your question.
       options:
         - label: I have searched for a similar question in open/closed issues.
-          required: true
         - label: I have checked the project’s documentation for relevant information.
-          required: true
         - label: I have provided as much detail as possible to help answer my question.
-          required: true
 
   - type: dropdown
     id: hvac_type
@@ -49,8 +44,6 @@ body:
         - NASA (Bus Protocol)
         - Non-NASA (Bus Protocol)
         - Other
-      validations:
-        required: true
 
   - type: input
     id: device_model
@@ -93,7 +86,7 @@ body:
       label: ESPHome Logs
       description: Please attach any relevant ESPHome logs that can help us understand your issue.
       placeholder: Include ESPHome logs here...
-  
+
   - type: textarea
     id: additional_info
     attributes:
