@@ -1,5 +1,3 @@
-name: "Question"
-description: "Use this template to ask a question."
 title: "[Question] "
 labels: ["question"]
 body:
