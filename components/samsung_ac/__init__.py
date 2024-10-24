@@ -81,8 +81,10 @@ CONF_DEVICE_CUSTOM = "custom_sensor"
 CONF_DEVICE_CUSTOM_MESSAGE = "message"
 CONF_DEVICE_CUSTOM_RAW_FILTERS = "raw_filters"
 CONF_DEVICE_ERROR_CODE = "error_code"
-CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION = "instantaneous_power_consumption"
-CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION = "cumulative_energy_consumption"
+CONF_DEVICE_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM = "out_control_wattmeter_all_unit_accum"
+CONF_DEVICE_OUT_CONTROL_WATTMETER_1W_1MIN_SUM = "out_control_wattmeter_1w_1min_sum"
+CONF_DEVICE_OUT_SENSOR_CT1 = "outdoor_current"
+CONF_DEVICE_OUT_SENSOR_VOLTAGE = "outdoor_voltage"
 
 
 
@@ -234,14 +236,14 @@ DEVICE_SCHEMA = (
             # keep CUSTOM_SENSOR_KEYS in sync with these
             cv.Optional(CONF_DEVICE_WATER_TEMPERATURE): temperature_sensor_schema(0x4237),
             cv.Optional(CONF_DEVICE_ROOM_HUMIDITY): humidity_sensor_schema(0x4038),
-            cv.Optional(CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION): sensor.sensor_schema(
+            cv.Optional(CONF_DEVICE_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM): sensor.sensor_schema(
                 unit_of_measurement=UNIT_WATT,
                 accuracy_decimals=1,
                 device_class=DEVICE_CLASS_POWER,
                 state_class=STATE_CLASS_MEASUREMENT,
                 icon="mdi:flash",
             ),
-            cv.Optional(CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION): sensor.sensor_schema(
+            cv.Optional(CONF_DEVICE_OUT_CONTROL_WATTMETER_1W_1MIN_SUM): sensor.sensor_schema(
                 unit_of_measurement="kWh",
                 accuracy_decimals=3,
                 device_class=DEVICE_CLASS_ENERGY,
@@ -249,6 +251,26 @@ DEVICE_SCHEMA = (
                 icon="mdi:counter",
             ).extend({
                 cv.Optional(CONF_FILTERS, default=[{"multiply": 0.001}]): sensor.validate_filters
+            }),
+            cv.Optional(CONF_DEVICE_OUT_SENSOR_CT1): sensor.sensor_schema(
+                unit_of_measurement=UNIT_AMPERE,
+                accuracy_decimals=2,
+                device_class=DEVICE_CLASS_CURRENT,
+                state_class=STATE_CLASS_MEASUREMENT,
+                icon="mdi:current-ac",
+            ).extend({
+                cv.Optional(CONF_DEVICE_CUSTOM_MESSAGE, default=0x8217): cv.hex_int,
+                cv.Optional(CONF_FILTERS, default=[{"multiply": 0.1}]): sensor.validate_filters
+            }),
+            cv.Optional(CONF_DEVICE_OUT_SENSOR_VOLTAGE): sensor.sensor_schema(
+                unit_of_measurement=UNIT_VOLT,
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_VOLTAGE,
+                state_class=STATE_CLASS_MEASUREMENT,
+                icon="mdi:flash",
+            ).extend({
+                
+                cv.Optional(CONF_DEVICE_CUSTOM_MESSAGE, default=0x24fc): cv.hex_int,
             }),
         }
     )
@@ -359,8 +381,10 @@ async def to_code(config):
             CONF_DEVICE_INDOOR_EVA_IN_TEMPERATURE: (sensor.new_sensor, var_dev.set_indoor_eva_in_temperature_sensor),
             CONF_DEVICE_INDOOR_EVA_OUT_TEMPERATURE: (sensor.new_sensor, var_dev.set_indoor_eva_out_temperature_sensor),
             CONF_DEVICE_ERROR_CODE: (sensor.new_sensor, var_dev.set_error_code_sensor),
-            CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION: (sensor.new_sensor, var_dev.set_instantaneous_power_consumption_sensor),
-            CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION: (sensor.new_sensor, var_dev.set_cumulative_energy_consumption_sensor),
+            CONF_DEVICE_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM: (sensor.new_sensor, var_dev.set_outdoor_instantaneous_power_sensor),
+            CONF_DEVICE_OUT_CONTROL_WATTMETER_1W_1MIN_SUM: (sensor.new_sensor, var_dev.set_outdoor_cumulative_energy_sensor),
+            CONF_DEVICE_OUT_SENSOR_CT1: (sensor.new_sensor, var_dev.set_outdoor_current_sensor),
+            CONF_DEVICE_OUT_SENSOR_VOLTAGE: (sensor.new_sensor, var_dev.set_outdoor_voltage_sensor),
         }
 
         # Iterate over the actions

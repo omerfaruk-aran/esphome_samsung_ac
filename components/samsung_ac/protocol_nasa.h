@@ -89,8 +89,10 @@ namespace esphome
             VAR_in_temp_eva_in_f = 0x4205,
             VAR_in_temp_eva_out_f = 0x4206,
             VAR_out_error_code = 0x8235,
-            VAR_out_instantaneous_power_consumption = 0x8413,
-            VAR_out_cumulative_energy_consumption = 0x8414,
+            LVAR_OUT_CONTROL_WATTMETER_1W_1MIN_SUM = 0x8413,
+            LVAR_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM = 0x8414,
+            VAR_OUT_SENSOR_CT1 = 0x8217,
+            LVAR_NM_OUT_SENSOR_VOLTAGE = 0x24fc,
         };
 
         struct Address

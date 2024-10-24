@@ -108,8 +108,10 @@ namespace esphome
       sensor::Sensor *indoor_eva_in_temperature{nullptr};
       sensor::Sensor *indoor_eva_out_temperature{nullptr};
       sensor::Sensor *error_code{nullptr};
-      sensor::Sensor *instantaneous_power_consumption{nullptr};
-      sensor::Sensor *cumulative_energy_consumption{nullptr};
+      sensor::Sensor *outdoor_instantaneous_power{nullptr};
+      sensor::Sensor *outdoor_cumulative_energy{nullptr};
+      sensor::Sensor *outdoor_current{nullptr};
+      sensor::Sensor *outdoor_voltage{nullptr};
       Samsung_AC_Number *target_temperature{nullptr};
       Samsung_AC_Number *water_outlet_target{nullptr};
       Samsung_AC_Number *target_water_temperature{nullptr};
@@ -428,26 +430,48 @@ namespace esphome
             sensor.sensor->publish_state(value);
       }
 
-      void set_instantaneous_power_consumption_sensor(sensor::Sensor *sensor)
+      void set_outdoor_instantaneous_power_sensor(sensor::Sensor *sensor)
       {
-        instantaneous_power_consumption = sensor;
+        outdoor_instantaneous_power = sensor;
       }
 
-      void set_cumulative_energy_consumption_sensor(sensor::Sensor *sensor)
+      void update_outdoor_instantaneous_power(float value)
       {
-        cumulative_energy_consumption = sensor;
+        if (outdoor_instantaneous_power != nullptr)
+          outdoor_instantaneous_power->publish_state(value);
       }
 
-      void update_instantaneous_power_consumption(float value)
+      void set_outdoor_cumulative_energy_sensor(sensor::Sensor *sensor)
       {
-        if (instantaneous_power_consumption != nullptr)
-          instantaneous_power_consumption->publish_state(value);
+        outdoor_cumulative_energy = sensor;
       }
 
-      void update_cumulative_energy_consumption(float value)
+      void update_outdoor_cumulative_energy(float value)
       {
-        if (cumulative_energy_consumption != nullptr)
-          cumulative_energy_consumption->publish_state(value);
+        if (outdoor_cumulative_energy != nullptr)
+          outdoor_cumulative_energy->publish_state(value);
+      }
+
+      void set_outdoor_current_sensor(sensor::Sensor *sensor)
+      {
+        outdoor_current = sensor;
+      }
+
+      void update_outdoor_current(float value)
+      {
+        if (outdoor_current != nullptr)
+          outdoor_current->publish_state(value);
+      }
+
+      void set_outdoor_voltage_sensor(sensor::Sensor *sensor)
+      {
+        outdoor_voltage = sensor;
+      }
+
+      void update_outdoor_voltage(float value)
+      {
+        if (outdoor_voltage != nullptr)
+          outdoor_voltage->publish_state(value);
       }
 
       void publish_request(ProtocolRequest &request)
