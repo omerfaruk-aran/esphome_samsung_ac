@@ -108,8 +108,8 @@ namespace esphome
       sensor::Sensor *indoor_eva_in_temperature{nullptr};
       sensor::Sensor *indoor_eva_out_temperature{nullptr};
       sensor::Sensor *error_code{nullptr};
-      sensor::Sensor *actual_produced_energy{nullptr};
-      sensor::Sensor *total_produced_energy{nullptr};
+      sensor::Sensor *instantaneous_power_consumption{nullptr};
+      sensor::Sensor *cumulative_energy_consumption{nullptr};
       Samsung_AC_Number *target_temperature{nullptr};
       Samsung_AC_Number *water_outlet_target{nullptr};
       Samsung_AC_Number *target_water_temperature{nullptr};
@@ -428,26 +428,26 @@ namespace esphome
             sensor.sensor->publish_state(value);
       }
 
-      void set_actual_produced_energy_sensor(sensor::Sensor *sensor)
+      void set_instantaneous_power_consumption_sensor(sensor::Sensor *sensor)
       {
-        actual_produced_energy = sensor;
+        instantaneous_power_consumption = sensor;
       }
 
-      void set_total_produced_energy_sensor(sensor::Sensor *sensor)
+      void set_cumulative_energy_consumption_sensor(sensor::Sensor *sensor)
       {
-        total_produced_energy = sensor;
+        cumulative_energy_consumption = sensor;
       }
 
-      void update_actual_produced_energy(float value)
+      void update_instantaneous_power_consumption(float value)
       {
-        if (actual_produced_energy != nullptr)
-          actual_produced_energy->publish_state(value);
+        if (instantaneous_power_consumption != nullptr)
+          instantaneous_power_consumption->publish_state(value);
       }
 
-      void update_total_produced_energy(float value)
+      void update_cumulative_energy_consumption(float value)
       {
-        if (total_produced_energy != nullptr)
-          total_produced_energy->publish_state(value);
+        if (cumulative_energy_consumption != nullptr)
+          cumulative_energy_consumption->publish_state(value);
       }
 
       void publish_request(ProtocolRequest &request)

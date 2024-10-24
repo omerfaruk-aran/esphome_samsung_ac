@@ -89,8 +89,8 @@ namespace esphome
             VAR_in_temp_eva_in_f = 0x4205,
             VAR_in_temp_eva_out_f = 0x4206,
             VAR_out_error_code = 0x8235,
-            VAR_out_actual_produced_energy = 0x8426,
-            VAR_out_total_produced_energy = 0x8427,
+            VAR_out_instantaneous_power_consumption = 0x8413,
+            VAR_out_cumulative_energy_consumption = 0x8414,
         };
 
         struct Address

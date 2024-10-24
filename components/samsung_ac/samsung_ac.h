@@ -195,8 +195,8 @@ namespace esphome
           dev->update_error_code(value);
       }
 
-      void set_actual_produced_energy(const std::string &address, float value) override;
-      void set_total_produced_energy(const std::string &address, float value) override;
+      void set_instantaneous_power_consumption(const std::string &address, float value) override;
+      void set_cumulative_energy_consumption(const std::string &address, float value) override;
 
     protected:
       Samsung_AC_Device *find_device(const std::string address)

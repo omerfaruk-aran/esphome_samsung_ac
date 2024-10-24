@@ -727,24 +727,24 @@ namespace esphome
                 target->set_error_code(source, code);
                 break;
             }
-            case MessageNumber::VAR_out_actual_produced_energy:
+            case MessageNumber::VAR_out_instantaneous_power_consumption:
             {
-                double value = static_cast<double>(message.value) / 1000.0;
+                double value = static_cast<double>(message.value);
                 if (debug_log_messages)
                 {
-                    ESP_LOGW(TAG, "s:%s d:%s actual_produced_energy %g kWh", source.c_str(), dest.c_str(), value);
+                    ESP_LOGW(TAG, "s:%s d:%s instantaneous_power_consumption %g W", source.c_str(), dest.c_str(), value);
                 }
-                target->set_actual_produced_energy(source, value);
+                target->set_instantaneous_power_consumption(source, value);
                 break;
             }
-            case MessageNumber::VAR_out_total_produced_energy:
+            case MessageNumber::VAR_out_cumulative_energy_consumption:
             {
                 double value = static_cast<double>(message.value) / 1000.0;
                 if (debug_log_messages)
                 {
-                    ESP_LOGW(TAG, "s:%s d:%s total_produced_energy %g kWh", source.c_str(), dest.c_str(), value);
+                    ESP_LOGW(TAG, "s:%s d:%s cumulative_energy_consumption %g kWh", source.c_str(), dest.c_str(), value);
                 }
-                target->set_total_produced_energy(source, value);
+                target->set_cumulative_energy_consumption(source, value);
                 break;
             }
             default:
@@ -767,20 +767,21 @@ namespace esphome
                     LOG_MESSAGE(VAR_IN_FSV_3023, value, source, dest);
                     break;
 
-                case 0x8414:
-                    value = (double)message.value / 1000.0;
-                    LOG_MESSAGE(LVAR_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM, value, source, dest);
-                    break;
-
-                case 0x8413:
-                    value = (double)message.value;
-                    LOG_MESSAGE(LVAR_OUT_CONTROL_WATTMETER_1W_1MIN_SUM, value, source, dest);
-                    break;
-
                 case 0x8411:
                     value = (double)message.value;
                     LOG_MESSAGE(NASA_OUTDOOR_CONTROL_WATTMETER_1UNIT, value, source, dest);
                     break;
+
+                case 0x8427:
+                    value = (double)message.value;
+                    LOG_MESSAGE(total_produced_energy, value, source, dest);
+                    break;
+
+                case 0x8426:
+                    value = (double)message.value;
+                    LOG_MESSAGE(actual_produced_energy, value, source, dest);
+                    break;
+
 
                 case 0x8415:
                     value = (double)message.value;
@@ -1141,9 +1142,6 @@ namespace esphome
             case 0x82a1:
             case 0x82b5:
             case 0x82b6:
-            case 0x8411:
-            case 0x8413:
-            case 0x8414:
             case 0x8608:
             case 0x860c:
             case 0x860d:

@@ -94,8 +94,8 @@ namespace esphome
             virtual void set_swing_horizontal(const std::string address, bool horizontal) = 0;
             virtual void set_custom_sensor(const std::string address, uint16_t message_number, float value) = 0;
             virtual void set_error_code(const std::string address, int error_code) = 0;
-            virtual void set_actual_produced_energy(const std::string &address, float value) = 0;
-            virtual void set_total_produced_energy(const std::string &address, float value) = 0;
+            virtual void set_instantaneous_power_consumption(const std::string &address, float value) = 0;
+            virtual void set_cumulative_energy_consumption(const std::string &address, float value) = 0;
         };
 
         struct ProtocolRequest

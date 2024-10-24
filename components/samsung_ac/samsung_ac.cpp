@@ -70,19 +70,19 @@ namespace esphome
         ESP_LOGCONFIG(TAG, "  Other:   %s", knownOther.c_str());
       }
     }
-    
-    void Samsung_AC::set_actual_produced_energy(const std::string &address, float value)
+
+    void Samsung_AC::set_instantaneous_power_consumption(const std::string &address, float value)
     {
       Samsung_AC_Device *dev = find_device(address);
       if (dev != nullptr)
-        dev->update_actual_produced_energy(value);
+        dev->update_instantaneous_power_consumption(value);
     }
 
-    void Samsung_AC::set_total_produced_energy(const std::string &address, float value)
+    void Samsung_AC::set_cumulative_energy_consumption(const std::string &address, float value)
     {
       Samsung_AC_Device *dev = find_device(address);
       if (dev != nullptr)
-        dev->update_total_produced_energy(value);
+        dev->update_cumulative_energy_consumption(value);
     }
 
     void Samsung_AC::register_device(Samsung_AC_Device *device)

@@ -74,8 +74,8 @@ CONF_DEVICE_CUSTOM = "custom_sensor"
 CONF_DEVICE_CUSTOM_MESSAGE = "message"
 CONF_DEVICE_CUSTOM_RAW_FILTERS = "raw_filters"
 CONF_DEVICE_ERROR_CODE = "error_code"
-CONF_DEVICE_ACTUAL_PRODUCED_ENERGY = "actual_produced_energy"
-CONF_DEVICE_TOTAL_PRODUCED_ENERGY = "total_produced_energy"
+CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION = "instantaneous_power_consumption "
+CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION = "cumulative_energy_consumption "
 
 
 
@@ -236,8 +236,8 @@ DEVICE_SCHEMA = (
             # keep CUSTOM_SENSOR_KEYS in sync with these
             cv.Optional(CONF_DEVICE_WATER_TEMPERATURE): temperature_sensor_schema(0x4237),
             cv.Optional(CONF_DEVICE_ROOM_HUMIDITY): humidity_sensor_schema(0x4038),
-            cv.Optional(CONF_DEVICE_ACTUAL_PRODUCED_ENERGY): energy_sensor_schema(0x8426, state_class=STATE_CLASS_MEASUREMENT),
-            cv.Optional(CONF_DEVICE_TOTAL_PRODUCED_ENERGY): energy_sensor_schema(0x8427, state_class=STATE_CLASS_TOTAL_INCREASING),
+            cv.Optional(CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION): energy_sensor_schema(0x8413, state_class=STATE_CLASS_MEASUREMENT),
+            cv.Optional(CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION): energy_sensor_schema(0x8414, state_class=STATE_CLASS_TOTAL_INCREASING),
         }
     )
 )
@@ -347,8 +347,8 @@ async def to_code(config):
             CONF_DEVICE_INDOOR_EVA_IN_TEMPERATURE: (sensor.new_sensor, var_dev.set_indoor_eva_in_temperature_sensor),
             CONF_DEVICE_INDOOR_EVA_OUT_TEMPERATURE: (sensor.new_sensor, var_dev.set_indoor_eva_out_temperature_sensor),
             CONF_DEVICE_ERROR_CODE: (sensor.new_sensor, var_dev.set_error_code_sensor),
-            CONF_DEVICE_ACTUAL_PRODUCED_ENERGY: (sensor.new_sensor, var_dev.set_actual_produced_energy_sensor),
-            CONF_DEVICE_TOTAL_PRODUCED_ENERGY: (sensor.new_sensor, var_dev.set_total_produced_energy_sensor),
+            CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION: (sensor.new_sensor, var_dev.set_instantaneous_power_consumption_sensor),
+            CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION: (sensor.new_sensor, var_dev.set_cumulative_energy_consumption_sensor),
         }
 
         # Iterate over the actions
