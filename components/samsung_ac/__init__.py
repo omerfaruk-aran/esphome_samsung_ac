@@ -248,9 +248,7 @@ DEVICE_SCHEMA = (
                 state_class=STATE_CLASS_TOTAL_INCREASING,
                 icon="mdi:counter",
             ).extend({
-                cv.Optional(CONF_FILTERS): [
-                    {"multiply": 0.001}
-                ]
+                cv.Optional(CONF_FILTERS, default=[{"multiply": 0.001}]): sensor.validate_filters
             }),
         }
     )
