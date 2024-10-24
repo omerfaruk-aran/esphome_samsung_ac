@@ -727,7 +727,7 @@ namespace esphome
                 target->set_error_code(source, code);
                 break;
             }
-            case MessageNumber::LVAR_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM:
+            case MessageNumber::LVAR_OUT_CONTROL_WATTMETER_1W_1MIN_SUM:
             {
                 double value = static_cast<double>(message.value);
                 if (debug_log_messages)
@@ -737,7 +737,7 @@ namespace esphome
                 target->set_outdoor_instantaneous_power(source, value);
                 break;
             }
-            case MessageNumber::LVAR_OUT_CONTROL_WATTMETER_1W_1MIN_SUM:
+            case MessageNumber::LVAR_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM:
             {
                 double value = static_cast<double>(message.value);
                 if (debug_log_messages)
