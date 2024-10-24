@@ -14,7 +14,6 @@ from esphome.const import (
     UNIT_CELSIUS,
     UNIT_PERCENT,
     UNIT_WATT,
-    UNIT_KILOWATT_HOUR,
     UNIT_VOLT,
     UNIT_AMPERE,
     CONF_UNIT_OF_MEASUREMENT,
@@ -243,11 +242,14 @@ DEVICE_SCHEMA = (
                 icon="mdi:flash",
             ),
             cv.Optional(CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION): sensor.sensor_schema(
-                unit_of_measurement=UNIT_KILOWATT_HOUR,
-                accuracy_decimals=1,
+                unit_of_measurement="kWh",
+                accuracy_decimals=3,
                 device_class=DEVICE_CLASS_ENERGY,
                 state_class=STATE_CLASS_TOTAL_INCREASING,
                 icon="mdi:counter",
+                filters=[
+                    {"multiply": 0.001}
+                ],
             ),
         }
     )
