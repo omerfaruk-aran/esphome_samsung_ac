@@ -56,9 +56,19 @@ namespace esphome
       {
         debug_log_undefined_messages = value;
       }
-      
+
       void set_actual_produced_energy(const std::string &address, float value) override;
+      {
+        Samsung_AC_Device *dev = find_device(address);
+        if (dev != nullptr)
+          dev->update_actual_produced_energy(value);
+      }
       void set_total_produced_energy(const std::string &address, float value) override;
+      {
+        Samsung_AC_Device *dev = find_device(address);
+        if (dev != nullptr)
+          dev->update_total_produced_energy(value);
+      }
       void register_device(Samsung_AC_Device *device);
 
       void /*MessageTarget::*/ register_address(const std::string address) override

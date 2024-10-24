@@ -73,6 +73,8 @@ CONF_DEVICE_CUSTOM = "custom_sensor"
 CONF_DEVICE_CUSTOM_MESSAGE = "message"
 CONF_DEVICE_CUSTOM_RAW_FILTERS = "raw_filters"
 CONF_DEVICE_ERROR_CODE = "error_code"
+CONF_DEVICE_ACTUAL_PRODUCED_ENERGY = "actual_produced_energy"
+CONF_DEVICE_TOTAL_PRODUCED_ENERGY = "total_produced_energy"
 
 
 
@@ -178,6 +180,15 @@ def error_code_sensor_schema(message: int):
         icon="mdi:alert",
     )
     
+def energy_sensor_schema(message: int, state_class=STATE_CLASS_MEASUREMENT):
+    return custom_sensor_schema(
+        message=message,
+        unit_of_measurement="kWh",
+        accuracy_decimals=3,
+        device_class="energy",
+        state_class=state_class,
+    )
+        
 DEVICE_SCHEMA = (
     cv.Schema(
         {
@@ -224,6 +235,8 @@ DEVICE_SCHEMA = (
             # keep CUSTOM_SENSOR_KEYS in sync with these
             cv.Optional(CONF_DEVICE_WATER_TEMPERATURE): temperature_sensor_schema(0x4237),
             cv.Optional(CONF_DEVICE_ROOM_HUMIDITY): humidity_sensor_schema(0x4038),
+            cv.Optional(CONF_DEVICE_ACTUAL_PRODUCED_ENERGY): energy_sensor_schema(0x8426, state_class=STATE_CLASS_MEASUREMENT),
+            cv.Optional(CONF_DEVICE_TOTAL_PRODUCED_ENERGY): energy_sensor_schema(0x8427, state_class=STATE_CLASS_TOTAL_INCREASING),
         }
     )
 )
@@ -333,6 +346,8 @@ async def to_code(config):
             CONF_DEVICE_INDOOR_EVA_IN_TEMPERATURE: (sensor.new_sensor, var_dev.set_indoor_eva_in_temperature_sensor),
             CONF_DEVICE_INDOOR_EVA_OUT_TEMPERATURE: (sensor.new_sensor, var_dev.set_indoor_eva_out_temperature_sensor),
             CONF_DEVICE_ERROR_CODE: (sensor.new_sensor, var_dev.set_error_code_sensor),
+            CONF_DEVICE_ACTUAL_PRODUCED_ENERGY: (sensor.new_sensor, var_dev.set_actual_produced_energy_sensor),
+            CONF_DEVICE_TOTAL_PRODUCED_ENERGY: (sensor.new_sensor, var_dev.set_total_produced_energy_sensor),
         }
 
         # Iterate over the actions
