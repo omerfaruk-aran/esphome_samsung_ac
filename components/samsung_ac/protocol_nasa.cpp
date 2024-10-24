@@ -727,7 +727,26 @@ namespace esphome
                 target->set_error_code(source, code);
                 break;
             }
-
+            case MessageNumber::VAR_out_actual_produced_energy:
+            {
+                double value = static_cast<double>(message.value) / 1000.0;
+                if (debug_log_messages)
+                {
+                    ESP_LOGW(TAG, "s:%s d:%s actual_produced_energy %g kWh", source.c_str(), dest.c_str(), value);
+                }
+                target->set_actual_produced_energy(source, value);
+                break;
+            }
+            case MessageNumber::VAR_out_total_produced_energy:
+            {
+                double value = static_cast<double>(message.value) / 1000.0;
+                if (debug_log_messages)
+                {
+                    ESP_LOGW(TAG, "s:%s d:%s total_produced_energy %g kWh", source.c_str(), dest.c_str(), value);
+                }
+                target->set_total_produced_energy(source, value);
+                break;
+            }
             default:
             {
                 double value = 0;
@@ -761,16 +780,6 @@ namespace esphome
                 case 0x8411:
                     value = (double)message.value;
                     LOG_MESSAGE(NASA_OUTDOOR_CONTROL_WATTMETER_1UNIT, value, source, dest);
-                    break;
-
-                case 0x8427:
-                    value = (double)message.value;
-                    LOG_MESSAGE(total_produced_energy, value, source, dest);
-                    break;
-
-                case 0x8426:
-                    value = (double)message.value;
-                    LOG_MESSAGE(actual_produced_energy, value, source, dest);
                     break;
 
                 case 0x8415:

@@ -17,7 +17,7 @@ from esphome.core import (
     Lambda
 )
 
-CODEOWNERS = ["matthias882", "lanwin"]
+CODEOWNERS = ["matthias882", "lanwin", "omerfaruk-aran"]
 DEPENDENCIES = ["uart"]
 AUTO_LOAD = ["sensor", "switch", "select", "number", "climate"]
 MULTI_CONF = False
