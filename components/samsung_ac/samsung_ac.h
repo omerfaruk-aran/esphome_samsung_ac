@@ -195,18 +195,8 @@ namespace esphome
           dev->update_error_code(value);
       }
 
-      void set_actual_produced_energy(const std::string &address, float value) override
-      {
-        Samsung_AC_Device *dev = find_device(address);
-        if (dev != nullptr)
-          dev->update_actual_produced_energy(value);
-      }
-      void set_total_produced_energy(const std::string &address, float value) override
-      {
-        Samsung_AC_Device *dev = find_device(address);
-        if (dev != nullptr)
-          dev->update_total_produced_energy(value);
-      }
+      void set_actual_produced_energy(const std::string &address, float value) override;
+      void set_total_produced_energy(const std::string &address, float value) override;
 
     protected:
       Samsung_AC_Device *find_device(const std::string address)
