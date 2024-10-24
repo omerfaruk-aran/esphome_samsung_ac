@@ -6,12 +6,20 @@ from esphome.const import (
     DEVICE_CLASS_TEMPERATURE,
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
+    DEVICE_CLASS_ENERGY,
+    DEVICE_CLASS_POWER,
     DEVICE_CLASS_HUMIDITY,
+    DEVICE_CLASS_VOLTAGE,
+    DEVICE_CLASS_CURRENT,
+    UNIT_CELSIUS,
+    UNIT_PERCENT,
+    UNIT_WATT,
+    UNIT_KILOWATT_HOUR,
+    UNIT_VOLT,
+    UNIT_AMPERE,
     CONF_UNIT_OF_MEASUREMENT,
     CONF_DEVICE_CLASS,
     CONF_FILTERS,
-    UNIT_CELSIUS,
-    UNIT_PERCENT,
 )
 from esphome.core import (
     CORE,
@@ -180,15 +188,6 @@ def error_code_sensor_schema(message: int):
         accuracy_decimals=0,
         icon="mdi:alert",
     )
-    
-def energy_sensor_schema(message: int, state_class=STATE_CLASS_MEASUREMENT):
-    return custom_sensor_schema(
-        message=message,
-        unit_of_measurement="kWh",
-        accuracy_decimals=3,
-        device_class="energy",
-        state_class=state_class,
-    )
         
 DEVICE_SCHEMA = (
     cv.Schema(
@@ -236,8 +235,20 @@ DEVICE_SCHEMA = (
             # keep CUSTOM_SENSOR_KEYS in sync with these
             cv.Optional(CONF_DEVICE_WATER_TEMPERATURE): temperature_sensor_schema(0x4237),
             cv.Optional(CONF_DEVICE_ROOM_HUMIDITY): humidity_sensor_schema(0x4038),
-            cv.Optional(CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION): energy_sensor_schema(0x8413, state_class=STATE_CLASS_MEASUREMENT),
-            cv.Optional(CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION): energy_sensor_schema(0x8414, state_class=STATE_CLASS_TOTAL_INCREASING),
+            cv.Optional(CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION): sensor.sensor_schema(
+                unit_of_measurement=UNIT_WATT,
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_POWER,
+                state_class=STATE_CLASS_MEASUREMENT,
+                icon="mdi:flash",
+            ),
+            cv.Optional(CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION): sensor.sensor_schema(
+                unit_of_measurement=UNIT_KILOWATT_HOUR,
+                accuracy_decimals=1,
+                device_class=DEVICE_CLASS_ENERGY,
+                state_class=STATE_CLASS_TOTAL_INCREASING,
+                icon="mdi:counter",
+            ),
         }
     )
 )

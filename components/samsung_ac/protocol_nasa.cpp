@@ -729,7 +729,7 @@ namespace esphome
             }
             case MessageNumber::VAR_out_instantaneous_power_consumption:
             {
-                double value = static_cast<double>(message.value)/1000.0;
+                double value = static_cast<double>(message.value);
                 if (debug_log_messages)
                 {
                     ESP_LOGW(TAG, "s:%s d:%s instantaneous_power_consumption %g W", source.c_str(), dest.c_str(), value);
