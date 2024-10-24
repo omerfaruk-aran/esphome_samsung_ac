@@ -74,8 +74,8 @@ CONF_DEVICE_CUSTOM = "custom_sensor"
 CONF_DEVICE_CUSTOM_MESSAGE = "message"
 CONF_DEVICE_CUSTOM_RAW_FILTERS = "raw_filters"
 CONF_DEVICE_ERROR_CODE = "error_code"
-CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION = "instantaneous_power_consumption "
-CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION = "cumulative_energy_consumption "
+CONF_DEVICE_INSTANTANEOUS_POWER_CONSUMPTION = "instantaneous_power_consumption"
+CONF_DEVICE_CUMULATIVE_ENERGY_CONSUMPTION = "cumulative_energy_consumption"
 
 
 
