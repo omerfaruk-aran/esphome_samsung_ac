@@ -247,10 +247,11 @@ DEVICE_SCHEMA = (
                 device_class=DEVICE_CLASS_ENERGY,
                 state_class=STATE_CLASS_TOTAL_INCREASING,
                 icon="mdi:counter",
-                filters=[
+            ).extend({
+                cv.Optional(CONF_FILTERS): [
                     {"multiply": 0.001}
-                ],
-            ),
+                ]
+            }),
         }
     )
 )
