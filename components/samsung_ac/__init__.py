@@ -378,7 +378,7 @@ async def to_code(config):
             CONF_DEVICE_OUT_SENSOR_VOLTAGE: (sensor.new_sensor, var_dev.set_outdoor_voltage_sensor),
         }
 
-        # Iterate over the actions
+        # Iterate over the actions.
         for key, (action, method) in device_actions.items():
             if key in device:
                 conf = device[key]
