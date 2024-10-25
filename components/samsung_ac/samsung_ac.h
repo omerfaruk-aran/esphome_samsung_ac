@@ -195,10 +195,33 @@ namespace esphome
           dev->update_error_code(value);
       }
 
-      void set_outdoor_instantaneous_power(const std::string &address, float value) override;
-      void set_outdoor_cumulative_energy(const std::string &address, float value) override;
-      void set_outdoor_current(const std::string &address, float value) override;
-      void set_outdoor_voltage(const std::string &address, float value) override;
+      void set_outdoor_instantaneous_power(const std::string &address, float value)
+      {
+        Samsung_AC_Device *dev = find_device(address);
+        if (dev != nullptr)
+          dev->update_outdoor_instantaneous_power(value);
+      }
+
+      void set_outdoor_cumulative_energy(const std::string &address, float value)
+      {
+        Samsung_AC_Device *dev = find_device(address);
+        if (dev != nullptr)
+          dev->update_outdoor_cumulative_energy(value);
+      }
+
+      void set_outdoor_current(const std::string &address, float value)
+      {
+        Samsung_AC_Device *dev = find_device(address);
+        if (dev != nullptr)
+          dev->update_outdoor_current(value);
+      }
+      
+      void set_outdoor_voltage(const std::string &address, float value)
+      {
+        Samsung_AC_Device *dev = find_device(address);
+        if (dev != nullptr)
+          dev->update_outdoor_voltage(value);
+      }
 
     protected:
       Samsung_AC_Device *find_device(const std::string address)

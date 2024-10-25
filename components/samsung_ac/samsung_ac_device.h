@@ -124,9 +124,59 @@ namespace esphome
       std::vector<Samsung_AC_Sensor> custom_sensors;
       float room_temperature_offset{0};
 
-      void set_room_temperature_sensor(sensor::Sensor *sensor)
+      void set_error_code_sensor(sensor::Sensor *sensor)
       {
-        room_temperature = sensor;
+        error_code = sensor;
+      }
+
+      void update_error_code(int value)
+      {
+        if (error_code != nullptr)
+          error_code->publish_state(value);
+      }
+
+      void set_outdoor_instantaneous_power_sensor(sensor::Sensor *sensor)
+      {
+        outdoor_instantaneous_power = sensor;
+      }
+
+      void update_outdoor_instantaneous_power(float value)
+      {
+        if (outdoor_instantaneous_power != nullptr)
+          outdoor_instantaneous_power->publish_state(value);
+      }
+
+      void set_outdoor_cumulative_energy_sensor(sensor::Sensor *sensor)
+      {
+        outdoor_cumulative_energy = sensor;
+      }
+
+      void update_outdoor_cumulative_energy(float value)
+      {
+        if (outdoor_cumulative_energy != nullptr)
+          outdoor_cumulative_energy->publish_state(value);
+      }
+
+      void set_outdoor_current_sensor(sensor::Sensor *sensor)
+      {
+        outdoor_current = sensor;
+      }
+
+      void update_outdoor_current(float value)
+      {
+        if (outdoor_current != nullptr)
+          outdoor_current->publish_state(value);
+      }
+
+      void set_outdoor_voltage_sensor(sensor::Sensor *sensor)
+      {
+        outdoor_voltage = sensor;
+      }
+
+      void update_outdoor_voltage(float value)
+      {
+        if (outdoor_voltage != nullptr)
+          outdoor_voltage->publish_state(value);
       }
 
       void set_outdoor_temperature_sensor(sensor::Sensor *sensor)
@@ -134,9 +184,21 @@ namespace esphome
         outdoor_temperature = sensor;
       }
 
+      void update_outdoor_temperature(float value)
+      {
+        if (outdoor_temperature != nullptr)
+          outdoor_temperature->publish_state(value);
+      }
+
       void set_indoor_eva_in_temperature_sensor(sensor::Sensor *sensor)
       {
         indoor_eva_in_temperature = sensor;
+      }
+
+      void update_indoor_eva_in_temperature(float value)
+      {
+        if (indoor_eva_in_temperature != nullptr)
+          indoor_eva_in_temperature->publish_state(value);
       }
 
       void set_indoor_eva_out_temperature_sensor(sensor::Sensor *sensor)
@@ -144,9 +206,33 @@ namespace esphome
         indoor_eva_out_temperature = sensor;
       }
 
-      void set_error_code_sensor(sensor::Sensor *sensor)
+      void update_indoor_eva_out_temperature(float value)
       {
-        error_code = sensor;
+        if (indoor_eva_out_temperature != nullptr)
+          indoor_eva_out_temperature->publish_state(value);
+      }
+
+      void update_custom_sensor(uint16_t message_number, float value)
+      {
+        for (auto &sensor : custom_sensors)
+          if (sensor.message_number == message_number)
+            sensor.sensor->publish_state(value);
+      }
+
+      void set_room_temperature_sensor(sensor::Sensor *sensor)
+      {
+        room_temperature = sensor;
+      }
+
+      void update_room_temperature(float value)
+      {
+        if (room_temperature != nullptr)
+          room_temperature->publish_state(value + room_temperature_offset);
+        if (climate != nullptr)
+        {
+          climate->current_temperature = value + room_temperature_offset;
+          climate->publish_state();
+        }
       }
 
       void add_custom_sensor(int message_number, sensor::Sensor *sensor)
@@ -386,92 +472,6 @@ namespace esphome
           climate->swing_mode = combine(climate->swing_mode, 2, value);
           climate->publish_state();
         }
-      }
-
-      void update_room_temperature(float value)
-      {
-        if (room_temperature != nullptr)
-          room_temperature->publish_state(value + room_temperature_offset);
-        if (climate != nullptr)
-        {
-          climate->current_temperature = value + room_temperature_offset;
-          climate->publish_state();
-        }
-      }
-
-      void update_outdoor_temperature(float value)
-      {
-        if (outdoor_temperature != nullptr)
-          outdoor_temperature->publish_state(value);
-      }
-
-      void update_indoor_eva_in_temperature(float value)
-      {
-        if (indoor_eva_in_temperature != nullptr)
-          indoor_eva_in_temperature->publish_state(value);
-      }
-
-      void update_indoor_eva_out_temperature(float value)
-      {
-        if (indoor_eva_out_temperature != nullptr)
-          indoor_eva_out_temperature->publish_state(value);
-      }
-
-      void update_error_code(int value)
-      {
-        if (error_code != nullptr)
-          error_code->publish_state(value);
-      }
-
-      void update_custom_sensor(uint16_t message_number, float value)
-      {
-        for (auto &sensor : custom_sensors)
-          if (sensor.message_number == message_number)
-            sensor.sensor->publish_state(value);
-      }
-
-      void set_outdoor_instantaneous_power_sensor(sensor::Sensor *sensor)
-      {
-        outdoor_instantaneous_power = sensor;
-      }
-
-      void update_outdoor_instantaneous_power(float value)
-      {
-        if (outdoor_instantaneous_power != nullptr)
-          outdoor_instantaneous_power->publish_state(value);
-      }
-
-      void set_outdoor_cumulative_energy_sensor(sensor::Sensor *sensor)
-      {
-        outdoor_cumulative_energy = sensor;
-      }
-
-      void update_outdoor_cumulative_energy(float value)
-      {
-        if (outdoor_cumulative_energy != nullptr)
-          outdoor_cumulative_energy->publish_state(value);
-      }
-
-      void set_outdoor_current_sensor(sensor::Sensor *sensor)
-      {
-        outdoor_current = sensor;
-      }
-
-      void update_outdoor_current(float value)
-      {
-        if (outdoor_current != nullptr)
-          outdoor_current->publish_state(value);
-      }
-
-      void set_outdoor_voltage_sensor(sensor::Sensor *sensor)
-      {
-        outdoor_voltage = sensor;
-      }
-
-      void update_outdoor_voltage(float value)
-      {
-        if (outdoor_voltage != nullptr)
-          outdoor_voltage->publish_state(value);
       }
 
       void publish_request(ProtocolRequest &request)

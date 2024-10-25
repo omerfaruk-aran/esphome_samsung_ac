@@ -71,34 +71,6 @@ namespace esphome
       }
     }
 
-    void Samsung_AC::set_outdoor_instantaneous_power(const std::string &address, float value)
-    {
-      Samsung_AC_Device *dev = find_device(address);
-      if (dev != nullptr)
-        dev->update_outdoor_instantaneous_power(value);
-    }
-
-    void Samsung_AC::set_outdoor_cumulative_energy(const std::string &address, float value)
-    {
-      Samsung_AC_Device *dev = find_device(address);
-      if (dev != nullptr)
-        dev->update_outdoor_cumulative_energy(value);
-    }
-
-    void Samsung_AC::set_outdoor_current(const std::string &address, float value)
-    {
-      Samsung_AC_Device *dev = find_device(address);
-      if (dev != nullptr)
-        dev->update_outdoor_current(value);
-    }
-
-    void Samsung_AC::set_outdoor_voltage(const std::string &address, float value)
-    {
-      Samsung_AC_Device *dev = find_device(address);
-      if (dev != nullptr)
-        dev->update_outdoor_voltage(value);
-    }
-
     void Samsung_AC::register_device(Samsung_AC_Device *device)
     {
       if (find_device(device->address) != nullptr)

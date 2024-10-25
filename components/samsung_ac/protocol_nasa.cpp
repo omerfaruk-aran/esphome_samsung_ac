@@ -730,40 +730,28 @@ namespace esphome
             case MessageNumber::LVAR_OUT_CONTROL_WATTMETER_1W_1MIN_SUM:
             {
                 double value = static_cast<double>(message.value);
-                if (debug_log_messages)
-                {
-                    ESP_LOGW(TAG, "s:%s d:%s outdoor_instantaneous_power %g W", source.c_str(), dest.c_str(), value);
-                }
+                LOG_MESSAGE(LVAR_OUT_CONTROL_WATTMETER_1W_1MIN_SUM, value, source, dest);
                 target->set_outdoor_instantaneous_power(source, value);
                 break;
             }
             case MessageNumber::LVAR_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM:
             {
                 double value = static_cast<double>(message.value);
-                if (debug_log_messages)
-                {
-                    ESP_LOGW(TAG, "s:%s d:%s outdoor_cumulative_energy %g kWh", source.c_str(), dest.c_str(), value);
-                }
+                LOG_MESSAGE(LVAR_OUT_CONTROL_WATTMETER_ALL_UNIT_ACCUM, value, source, dest);
                 target->set_outdoor_cumulative_energy(source, value);
                 break;
             }
             case MessageNumber::VAR_OUT_SENSOR_CT1:
             {
                 double value = static_cast<double>(message.value);
-                if (debug_log_messages)
-                {
-                    ESP_LOGW(TAG, "s:%s d:%s outdoor_current %g A", source.c_str(), dest.c_str(), value);
-                }
+                LOG_MESSAGE(VAR_OUT_SENSOR_CT1, value, source, dest);
                 target->set_outdoor_current(source, value);
                 break;
             }
             case MessageNumber::LVAR_NM_OUT_SENSOR_VOLTAGE:
             {
                 double value = static_cast<double>(message.value);
-                if (debug_log_messages)
-                {
-                    ESP_LOGW(TAG, "s:%s d:%s outdoor_voltage %g V", source.c_str(), dest.c_str(), value);
-                }
+                LOG_MESSAGE(LVAR_NM_OUT_SENSOR_VOLTAGE, value, source, dest);
                 target->set_outdoor_voltage(source, value);
                 break;
             }
