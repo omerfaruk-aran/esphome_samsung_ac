@@ -380,7 +380,7 @@ async def to_code(config):
 
         # Iterate over the actions
         for key, (action, method) in device_actions.items():
-            await handle_device_action(device, key, action, method)
+            handle_device_action(device, key, action, method)
 
         if CONF_DEVICE_ROOM_TEMPERATURE_OFFSET in device:
             cg.add(var_dev.set_room_temperature_offset(
