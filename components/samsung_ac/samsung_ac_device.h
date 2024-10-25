@@ -378,6 +378,9 @@ namespace esphome
         publish_number_state(target_water_temperature, value);
       }
 
+      optional<bool> _cur_power;
+      optional<Mode> _cur_mode;
+
       void update_power(bool value)
       {
         publish_switch_state(power, value);
