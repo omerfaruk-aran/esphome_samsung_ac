@@ -380,7 +380,10 @@ async def to_code(config):
 
         # Iterate over the actions
         for key, (action, method) in device_actions.items():
-            handle_device_action(device, key, action, method)
+            if key in device:
+                conf = device[key]
+                sens = await action(conf)
+                cg.add(method(sens))
 
         if CONF_DEVICE_ROOM_TEMPERATURE_OFFSET in device:
             cg.add(var_dev.set_room_temperature_offset(
@@ -484,9 +487,3 @@ async def to_code(config):
             
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
-
-async def handle_device_action(device, key, action, method):
-    if key in device:
-        conf = device[key]
-        sens = await action(conf)
-        cg.add(method(sens))
