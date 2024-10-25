@@ -99,6 +99,30 @@ namespace esphome
       }
     }
 
+    void publish_switch_state(switch_::Switch *sw, bool value)
+    {
+      if (sw != nullptr)
+      {
+        sw->publish_state(value);
+      }
+    }
+
+    void publish_number_state(number::Number *num, float value)
+    {
+      if (num != nullptr)
+      {
+        num->publish_state(value);
+      }
+    }
+
+    void publish_select_state(select::Select *sel, Mode value)
+    {
+      if (sel != nullptr)
+      {
+        sel->publish_state_(value);
+      }
+    }
+
     class Samsung_AC_Device
     {
     public:
@@ -138,7 +162,7 @@ namespace esphome
 
       void update_error_code(int value)
       {
-        publish_sensor_state(error_code, value);
+        publish_number_state(error_code, value);
       }
 
       void set_outdoor_instantaneous_power_sensor(sensor::Sensor *sensor)
@@ -336,7 +360,7 @@ namespace esphome
 
       void update_target_temperature(float value)
       {
-        publish_sensor_state(target_temperature, value);
+        publish_number_state(target_temperature, value);
         if (climate != nullptr)
         {
           climate->target_temperature = value;
@@ -346,54 +370,43 @@ namespace esphome
 
       void update_water_outlet_target(float value)
       {
-        publish_sensor_state(water_outlet_target, value);
+        publish_number_state(water_outlet_target, value);
       }
 
       void update_target_water_temperature(float value)
       {
-        publish_sensor_state(target_water_temperature, value);
+        publish_number_state(target_water_temperature, value);
       }
-
-      optional<bool> _cur_power;
-      optional<bool> _cur_automatic_cleaning;
-      optional<bool> _cur_water_heater_power;
-      optional<Mode> _cur_mode;
-      optional<WaterHeaterMode> _cur_water_heater_mode;
 
       void update_power(bool value)
       {
-        _cur_power = value;
-        publish_sensor_state(power, value);
+        publish_switch_state(power, value);
         if (climate != nullptr)
           calc_and_publish_mode();
       }
 
       void update_automatic_cleaning(bool value)
       {
-        _cur_automatic_cleaning = value;
-        publish_sensor_state(automatic_cleaning, value);
+        publish_switch_state(automatic_cleaning, value);
         if (climate != nullptr)
           calc_and_publish_mode();
       }
 
       void update_water_heater_power(bool value)
       {
-        _cur_water_heater_power = value;
-        publish_sensor_state(water_heater_power, value);
+        publish_switch_state(water_heater_power, value);
       }
 
       void update_mode(Mode value)
       {
-        _cur_mode = value;
-        publish_sensor_state(mode, value);
+        publish_select_state(mode, value);
         if (climate != nullptr)
           calc_and_publish_mode();
       }
 
       void update_water_heater_mode(WaterHeaterMode value)
       {
-        _cur_water_heater_mode = value;
-        publish_sensor_state(waterheatermode, value);
+        publish_select_state(waterheatermode, value);
       }
 
       void update_fanmode(FanMode value)
@@ -532,7 +545,7 @@ namespace esphome
       {
         if (!_cur_power.has_value() || !_cur_mode.has_value())
           return;
-       
+
         climate->mode = climate::ClimateMode::CLIMATE_MODE_OFF;
         if (_cur_power.value() == true)
         {
