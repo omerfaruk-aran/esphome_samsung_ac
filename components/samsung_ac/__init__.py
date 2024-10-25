@@ -221,7 +221,7 @@ DEVICE_SCHEMA = (
                 device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
-            cv.Optional(CONF_DEVICE_ERROR_CODE): NUMBER_SCHEMA, #error_code_sensor_schema(0x8235),
+            cv.Optional(CONF_DEVICE_ERROR_CODE): error_code_sensor_schema(0x8235),
             cv.Optional(CONF_DEVICE_TARGET_TEMPERATURE): NUMBER_SCHEMA,
             cv.Optional(CONF_DEVICE_WATER_OUTLET_TARGET): NUMBER_SCHEMA,
             cv.Optional(CONF_DEVICE_WATER_TARGET_TEMPERATURE): NUMBER_SCHEMA,
@@ -358,9 +358,18 @@ async def to_code(config):
                     cg.add(var_dev.add_alt_mode("None", 0))
 
                 cg.add(var_dev.add_alt_mode(
-                    preset_conf.get(CONF_PRESET_NAME, preset_info["displayName"]),
-                    preset_conf.get(CONF_PRESET_VALUE, preset_info["value"])
+                    preset_conf.get(CONF_PRESET_NAME, preset_info["displayName"]),  # Kullanıcı tarafından sağlanan adı kullan
+                    preset_conf.get(CONF_PRESET_VALUE, preset_info["value"])  # Kullanıcı tarafından sağlanan değeri kullan
                 ))
+                
+#        if CONF_CAPABILITIES in device and CONF_ALT_MODES in device[CONF_CAPABILITIES]:
+#            cg.add(var_dev.add_alt_mode("None", 0))
+#            for alt in device[CONF_CAPABILITIES][CONF_ALT_MODES]:
+#                cg.add(var_dev.add_alt_mode(alt[CONF_ALT_MODE_NAME], alt[CONF_ALT_MODE_VALUE]))
+#        elif CONF_CAPABILITIES in config and CONF_ALT_MODES in config[CONF_CAPABILITIES]:
+#            cg.add(var_dev.add_alt_mode("None", 0))
+#            for alt in config[CONF_CAPABILITIES][CONF_ALT_MODES]:
+#                cg.add(var_dev.add_alt_mode(alt[CONF_ALT_MODE_NAME], alt[CONF_ALT_MODE_VALUE]))
 
         # Mapping of config keys to their corresponding methods and types
         device_actions = {
@@ -378,7 +387,7 @@ async def to_code(config):
             CONF_DEVICE_OUT_SENSOR_VOLTAGE: (sensor.new_sensor, var_dev.set_outdoor_voltage_sensor),
         }
 
-        # Iterate over the actions.
+        # Iterate over the actions
         for key, (action, method) in device_actions.items():
             if key in device:
                 conf = device[key]
