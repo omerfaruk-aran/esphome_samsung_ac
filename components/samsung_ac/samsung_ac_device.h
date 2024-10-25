@@ -91,6 +91,13 @@ namespace esphome
       uint16_t message_number;
       sensor::Sensor *sensor;
     };
+    void publish_sensor_state(sensor::Sensor *sensor, float value)
+    {
+      if (sensor != nullptr)
+      {
+        sensor->publish_state(value);
+      }
+    }
 
     class Samsung_AC_Device
     {
@@ -121,7 +128,7 @@ namespace esphome
       Samsung_AC_Mode_Select *mode{nullptr};
       Samsung_AC_Water_Heater_Mode_Select *waterheatermode{nullptr};
       Samsung_AC_Climate *climate{nullptr};
-      std::vector<Samsung_AC_Sensor> custom_sensors;
+      std::map<uint16_t, sensor::Sensor *> custom_sensor_map;
       float room_temperature_offset{0};
 
       void set_error_code_sensor(sensor::Sensor *sensor)
@@ -131,8 +138,7 @@ namespace esphome
 
       void update_error_code(int value)
       {
-        if (error_code != nullptr)
-          error_code->publish_state(value);
+        publish_sensor_state(error_code, value);
       }
 
       void set_outdoor_instantaneous_power_sensor(sensor::Sensor *sensor)
@@ -142,8 +148,7 @@ namespace esphome
 
       void update_outdoor_instantaneous_power(float value)
       {
-        if (outdoor_instantaneous_power != nullptr)
-          outdoor_instantaneous_power->publish_state(value);
+        publish_sensor_state(outdoor_instantaneous_power, value);
       }
 
       void set_outdoor_cumulative_energy_sensor(sensor::Sensor *sensor)
@@ -153,8 +158,7 @@ namespace esphome
 
       void update_outdoor_cumulative_energy(float value)
       {
-        if (outdoor_cumulative_energy != nullptr)
-          outdoor_cumulative_energy->publish_state(value);
+        publish_sensor_state(outdoor_cumulative_energy, value);
       }
 
       void set_outdoor_current_sensor(sensor::Sensor *sensor)
@@ -164,8 +168,7 @@ namespace esphome
 
       void update_outdoor_current(float value)
       {
-        if (outdoor_current != nullptr)
-          outdoor_current->publish_state(value);
+        publish_sensor_state(outdoor_current, value);
       }
 
       void set_outdoor_voltage_sensor(sensor::Sensor *sensor)
@@ -175,8 +178,7 @@ namespace esphome
 
       void update_outdoor_voltage(float value)
       {
-        if (outdoor_voltage != nullptr)
-          outdoor_voltage->publish_state(value);
+        publish_sensor_state(outdoor_voltage, value);
       }
 
       void set_outdoor_temperature_sensor(sensor::Sensor *sensor)
@@ -186,8 +188,7 @@ namespace esphome
 
       void update_outdoor_temperature(float value)
       {
-        if (outdoor_temperature != nullptr)
-          outdoor_temperature->publish_state(value);
+        publish_sensor_state(outdoor_temperature, value);
       }
 
       void set_indoor_eva_in_temperature_sensor(sensor::Sensor *sensor)
@@ -197,8 +198,7 @@ namespace esphome
 
       void update_indoor_eva_in_temperature(float value)
       {
-        if (indoor_eva_in_temperature != nullptr)
-          indoor_eva_in_temperature->publish_state(value);
+        publish_sensor_state(indoor_eva_in_temperature, value);
       }
 
       void set_indoor_eva_out_temperature_sensor(sensor::Sensor *sensor)
@@ -208,15 +208,16 @@ namespace esphome
 
       void update_indoor_eva_out_temperature(float value)
       {
-        if (indoor_eva_out_temperature != nullptr)
-          indoor_eva_out_temperature->publish_state(value);
+        publish_sensor_state(indoor_eva_out_temperature, value);
       }
 
       void update_custom_sensor(uint16_t message_number, float value)
       {
-        for (auto &sensor : custom_sensors)
-          if (sensor.message_number == message_number)
-            sensor.sensor->publish_state(value);
+        auto it = custom_sensor_map.find(message_number);
+        if (it != custom_sensor_map.end())
+        {
+          it->second->publish_state(value);
+        }
       }
 
       void set_room_temperature_sensor(sensor::Sensor *sensor)
@@ -226,8 +227,7 @@ namespace esphome
 
       void update_room_temperature(float value)
       {
-        if (room_temperature != nullptr)
-          room_temperature->publish_state(value + room_temperature_offset);
+        publish_sensor_state(room_temperature, value + room_temperature_offset);
         if (climate != nullptr)
         {
           climate->current_temperature = value + room_temperature_offset;
@@ -237,10 +237,7 @@ namespace esphome
 
       void add_custom_sensor(int message_number, sensor::Sensor *sensor)
       {
-        Samsung_AC_Sensor cust_sensor;
-        cust_sensor.message_number = (uint16_t)message_number;
-        cust_sensor.sensor = sensor;
-        custom_sensors.push_back(std::move(cust_sensor));
+        custom_sensor_map[(uint16_t)message_number] = sensor;
       }
 
       void set_power_switch(Samsung_AC_Switch *switch_)
@@ -339,8 +336,7 @@ namespace esphome
 
       void update_target_temperature(float value)
       {
-        if (target_temperature != nullptr)
-          target_temperature->publish_state(value);
+        publish_sensor_state(target_temperature, value);
         if (climate != nullptr)
         {
           climate->target_temperature = value;
@@ -350,14 +346,12 @@ namespace esphome
 
       void update_water_outlet_target(float value)
       {
-        if (water_outlet_target != nullptr)
-          water_outlet_target->publish_state(value);
+        publish_sensor_state(water_outlet_target, value);
       }
 
       void update_target_water_temperature(float value)
       {
-        if (target_water_temperature != nullptr)
-          target_water_temperature->publish_state(value);
+        publish_sensor_state(target_water_temperature, value);
       }
 
       optional<bool> _cur_power;
@@ -369,8 +363,7 @@ namespace esphome
       void update_power(bool value)
       {
         _cur_power = value;
-        if (power != nullptr)
-          power->publish_state(value);
+        publish_sensor_state(power, value);
         if (climate != nullptr)
           calc_and_publish_mode();
       }
@@ -378,8 +371,7 @@ namespace esphome
       void update_automatic_cleaning(bool value)
       {
         _cur_automatic_cleaning = value;
-        if (automatic_cleaning != nullptr)
-          automatic_cleaning->publish_state(value);
+        publish_sensor_state(automatic_cleaning, value);
         if (climate != nullptr)
           calc_and_publish_mode();
       }
@@ -387,15 +379,13 @@ namespace esphome
       void update_water_heater_power(bool value)
       {
         _cur_water_heater_power = value;
-        if (water_heater_power != nullptr)
-          water_heater_power->publish_state(value);
+        publish_sensor_state(water_heater_power, value);
       }
 
       void update_mode(Mode value)
       {
         _cur_mode = value;
-        if (mode != nullptr)
-          mode->publish_state_(value);
+        publish_sensor_state(mode, value);
         if (climate != nullptr)
           calc_and_publish_mode();
       }
@@ -403,8 +393,7 @@ namespace esphome
       void update_water_heater_mode(WaterHeaterMode value)
       {
         _cur_water_heater_mode = value;
-        if (waterheatermode != nullptr)
-          waterheatermode->publish_state_(value);
+        publish_sensor_state(waterheatermode, value);
       }
 
       void update_fanmode(FanMode value)
@@ -541,11 +530,9 @@ namespace esphome
 
       void calc_and_publish_mode()
       {
-        if (!_cur_power.has_value())
+        if (!_cur_power.has_value() || !_cur_mode.has_value())
           return;
-        if (!_cur_mode.has_value())
-          return;
-
+       
         climate->mode = climate::ClimateMode::CLIMATE_MODE_OFF;
         if (_cur_power.value() == true)
         {
